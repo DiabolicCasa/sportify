@@ -2,7 +2,6 @@
 import {
   createBrowserRouter,
   RouterProvider,
-  Outlet,
  
 } from "react-router-dom";
 import Signin from "./pages/signin";
