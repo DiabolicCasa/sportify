@@ -1,6 +1,6 @@
 import React, { useReducer, useState } from "react";
-import { API_ENDPOINT } from "../../config/constants";
-import { Link } from "react-router-dom";
+import { API_ENDPOINT, AUTH_TOKEN, ISLOGGED, USER } from "../../config/constants";
+import { Link, useNavigate } from "react-router-dom";
 
 interface SignupFormState {
   name: string;
@@ -31,6 +31,8 @@ const reducer = (state: SignupFormState, action: Action): SignupFormState => {
 const SignupForm: React.FC = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+
   // Handle form field changes
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -66,6 +68,15 @@ const SignupForm: React.FC = () => {
       const res = await response.json()
       console.log(res)
       dispatch({ type: "RESET" });
+
+      
+      localStorage.setItem(AUTH_TOKEN, JSON.stringify(res['auth_token']))
+      localStorage.setItem(ISLOGGED, JSON.stringify(true))
+      localStorage.setItem(USER, JSON.stringify('user'))
+
+      console.log(res)
+      dispatch({ type: "RESET" });
+      navigate("/home")
     } catch (error) {
       console.error("Signup failed:", error);
     }

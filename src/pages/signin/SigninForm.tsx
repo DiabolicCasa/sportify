@@ -1,6 +1,6 @@
 import React, { useReducer, useState } from "react";
-import { API_ENDPOINT } from "../../config/constants";
-import { Link } from "react-router-dom";
+import { API_ENDPOINT, AUTH_TOKEN, ISLOGGED, USER } from "../../config/constants";
+import { Link, useNavigate } from "react-router-dom";
 
 interface SigninFormState {
   email: string;
@@ -34,6 +34,7 @@ const SigninForm: React.FC = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [showPassword, setShowPassword] = useState(false);
 
+  const navigate = useNavigate()
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     field: keyof SigninFormState
@@ -66,8 +67,14 @@ const SigninForm: React.FC = () => {
       // Handle successful sign-in
       console.log("Signin successful");
       const res = await response.json()
+
+      localStorage.setItem(AUTH_TOKEN, JSON.stringify(res['auth_token']))
+      localStorage.setItem(ISLOGGED, JSON.stringify(true))
+      localStorage.setItem(USER, JSON.stringify('user'))
+
       console.log(res)
       dispatch({ type: "RESET" });
+      navigate("/home")
     } catch (error) {
       console.error("Signin failed:", error);
     }
