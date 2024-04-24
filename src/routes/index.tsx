@@ -8,6 +8,7 @@ import Signup from "../pages/signup";
 import ErrorPage from "../pages/error";
 import ProtectedRoute from "./ProtectedRoute";
 import Home from "../pages/home";
+import LandingPage from "../pages/landing";
   
   
 
@@ -19,7 +20,7 @@ export  const mainRouter = createBrowserRouter([
     },
     {
         path: "/",
-        element: <h1>Home</h1>,
+        element: <LandingPage/>,
        
       },
     {
