@@ -1,26 +1,25 @@
 import { API_ENDPOINT } from "../../config/constants";
-import { ActionTypes, ArticleDispatch } from "./types"
+import { ActionTypes, SportDispatch } from "./types"
 
-export const fetchArticles = async(dispatch : ArticleDispatch)   =>{
+export const fetchSports = async(dispatch : SportDispatch)   =>{
 
     try {
         const response = await fetch(
-            `${API_ENDPOINT}/articles`,
+            `${API_ENDPOINT}/sports`,
             {
               headers: {
                 "Content-Type": "application/json",
               },
             }
           );
-            console.log("Articles called")
+      
           if (!response.ok) {
             throw new Error("Failed to fetch tasks");
           }
       
           // extract the response body as JSON data
           const data = await response.json();
-          console.log(data.length)
-          dispatch({type : ActionTypes.FETCH_SUCCESS, payload : data})
+          dispatch({type : ActionTypes.FETCH_SUCCESS, payload : data['sports']})
     } catch (error) {
         console.error("Operation failed:", error);
     }
