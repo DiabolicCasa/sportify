@@ -29,11 +29,14 @@ const LandingPage: React.FC = () => {
   const [selectedSport, setSelectedSport] = useState("");
   const [selectedTeam, setSelectedTeam] = useState("");
 
-  useEffect(() => {
+  const pageLoad = () => {
     // Fetch initial data
     fetchArticles(articleDispatch);
     fetchSports(sportDispatch);
     fetchTeams(teamDispatch);
+  };
+  useEffect(() => {
+    pageLoad();
   }, []);
 
   useEffect(() => {
@@ -182,22 +185,27 @@ const LandingPage: React.FC = () => {
 
                 return newArticles.length > 0 ? (
                   newArticles.map((article) => (
-<div className="w-full border p-2 m-1 rounded-md" key={article.id}>
-  <h1 className="text-xl font-bold">{article.title}</h1>
-  <h4 className="text-gray-600">{article.summary}</h4>
-  <button className="w-full bg-primarygreen text-white rounded-md py-1 mt-2 hover:bg-green-700">
-    Read more
-  </button>
-</div>
-
-                   
+                    <div
+                      className="w-full border p-2 m-1 rounded-md"
+                      key={article.id}
+                    >
+                      <h1 className="text-normal mb-1 font-bold">
+                        {article.title}
+                      </h1>
+                      <h4 className="text-gray-600 text-sm">
+                        {article.summary}
+                      </h4>
+                      <button className="w-full bg-primarygreen text-white rounded-md py-1 mt-2 hover:bg-green-700">
+                        Read more
+                      </button>
+                    </div>
                   ))
                 ) : (
                   <div className="h-52 w-full flex justify-center items-center">
-                      <h1 className="text-xl text-gray-500 font-semibold">
-                        No Articles
-                      </h1>
-                    </div>
+                    <h1 className="text-xl text-gray-500 font-semibold">
+                      No Articles
+                    </h1>
+                  </div>
                 );
               })()}
             </div>
