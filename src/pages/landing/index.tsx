@@ -25,57 +25,41 @@ const LandingPage: React.FC = () => {
   const teamDispatch = useTeamDispatch();
 
   const [selectedTab, setSelectedTab] = useState(0);
+  const [selectedTabSport, setSelectedSportTab] = useState("");
+  const [selectedSport, setSelectedSport] = useState("");
+  const [selectedTeam, setSelectedTeam] = useState("");
 
+  useEffect(() => {
+    // Fetch initial data
+    fetchArticles(articleDispatch);
+    fetchSports(sportDispatch);
+    fetchTeams(teamDispatch);
+  }, []);
 
-  const handleTabChange = (index: number, id: number) => {
-    setSelectedTab(index);
-    console.log(`Tab changed to ${index}`);
-    if (index === 0) {
-      setArticlesCopy(articles);
-    } else {
-      let newArticles = articles.map((item) => ({ ...item }));
-      newArticles = newArticles.filter((item) => item.sport.id === id);
-      setArticlesCopy(newArticles);
+  useEffect(() => {
+    // Update articlesCopy based on selectedTab, selectedSport, etc.
+    // Use articles, selectedTab, selectedSport, etc. to filter and set articlesCopy
+  }, [articles, selectedTab, selectedSport]);
+
+  useEffect(() => {
+    // Update teamsCopy based on selectedSport, etc.
+    // Use teams, selectedSport, etc. to filter and set teamsCopy
+  }, [teams, selectedSport]);
+
+  const handleTabChange = (tabIndex: number, sportId: number) => {
+    setSelectedTab(tabIndex);
+    console.group(sportId);
+    if (tabIndex > 0) {
+      setSelectedSportTab(sports[tabIndex - 1].name);
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      await Promise.all([
-        fetchArticles(articleDispatch),
-        fetchSports(sportDispatch),
-        fetchTeams(teamDispatch)
-      ]);
-    };
+  const handleSportChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedSport(event.target.value);
+  };
 
-    fetchData().then(() => {
-      setArticlesCopy([...articles]);
-      console.log("Articles : ", articles);
-    });
-  }, []);
-
-  const [articlesCopy, setArticlesCopy] = useState(articles);
-  const [teamsCopy, setTeamsCopy] = useState(teams.filter((team)=>{return team.plays === 'Basketball'}));
-
-
-  const [selectedSport, setSelectedSport] = useState("");
-
-  const handleSportChange = (e : React.ChangeEvent<HTMLSelectElement>) => {
-
-    console.log(e.target.value)
-    setSelectedSport(e.target.value);
-
-    const newTeams = teams.filter((team)=>{
-        return team.plays === e.target.value;
-    })
-    console.log("New Teams : ",newTeams)
-    setTeamsCopy(newTeams)
-    setSelectedTeam(newTeams[0].name)
-  }; 
-   const [selectedTeam   , setSelectedTeam] = useState("");
-
-  const handleTeamChange = (e :React.ChangeEvent<HTMLSelectElement> ) => {
-    setSelectedTeam(e.target.value);
+  const handleTeamChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedTeam(event.target.value);
   };
 
   return (
@@ -88,10 +72,10 @@ const LandingPage: React.FC = () => {
             {/* Create todo div here */}
           </div>
         </div>
-        <div className="flex justify-between">
-          <div className="w-3/4 m-2">
+        <div className="flex flex-col md:flex-row justify-between">
+          <div className="w-full md:w-3/4 m-2">
             <h1 className="text-xl text-black font-bold">Trending News</h1>
-            <div className="w-9/10 border rounded-md p-2 mx-auto shadow-md mt-2 overflow-y-auto">
+            <div className="w-full border rounded-md p-2 mx-auto shadow-md mt-2 overflow-y-auto">
               <ul className="flex w-full p-2 justify-between">
                 <li
                   key={0}
@@ -114,52 +98,108 @@ const LandingPage: React.FC = () => {
                   </li>
                 ))}
               </ul>
-              {articlesCopy.length > 0 ? (
-                articlesCopy.map((item) => (
-                  <ArticleDiv key={item.id} item={item} />
-                ))
-              ) : (
-                <div className="h-52  w-full flex justify-center items-center">
-                  <h1 className="text-xl text-gray-500 font-semibold">
-                    No Articles
-                  </h1>
-                </div>
-              )}
+              {(() => {
+                // Filter articles based on the selected tab and sport
+                const filteredArticles = articles.filter((article) => {
+                  if (selectedTab === 0) {
+                    return true; // Show all articles if selectedTab is 0
+                  }
+                  return article.sport.name === selectedTabSport; // Show articles for selected sport
+                });
+
+                // Check if there are any filtered articles
+                if (filteredArticles.length > 0) {
+                  // If there are filtered articles, map and display them
+                  return filteredArticles.map((article) => (
+                    <ArticleDiv key={article.id} item={article} />
+                  ));
+                } else {
+                  // If there are no filtered articles, display "No Articles" message
+                  return (
+                    <div className="h-52 w-full flex justify-center items-center">
+                      <h1 className="text-xl text-gray-500 font-semibold">
+                        No Articles
+                      </h1>
+                    </div>
+                  );
+                }
+              })()}
             </div>
           </div>
-          <div className="w-1/4 m-2">
+          <div className="w-full md:w-1/4 m-2">
             <h1 className="text-xl text-black font-bold">Your Favourites</h1>
-            <div className="h-5/6 w-9/10 border rounded-md p-2 mx-auto shadow-md mt-2">
+            <div className="h-5/6 w-full border rounded-md p-2 mx-auto shadow-md mt-2">
               <div className="w-full border rounded-md p-2 shadow-md mb-5">
                 <select
                   className="py-2 px-3 pe-9 block w-full border-gray-200 border rounded-lg text-sm "
                   value={selectedSport}
                   onChange={handleSportChange}
                 >
-                 
-                  {
-                    sports.map((sport)=>{
-                    return   <option value={sport.name}>{sport.name}</option>
-                    })
-                  }
-                
-                </select><select
+                  <option value="">Select Sport</option>
+                  {sports.map((sport) => (
+                    <option key={sport.id} value={sport.name}>
+                      {sport.name}
+                    </option>
+                  ))}
+                </select>
+                <select
                   className="py-2 mt-2 px-3 pe-9 block w-full border-gray-200 border rounded-lg text-sm "
                   value={selectedTeam}
                   onChange={handleTeamChange}
                 >
-                 
-                  {
-                    teamsCopy.map((team)=>{
-                    return   <option value={team.name}>{team.name}</option>
+                  <option value="">Select Team</option>
+                  {teams
+                    .filter((team) => {
+                      if (selectedSport === "") {
+                        return false;
+                      }
+                      return team.plays === selectedSport;
                     })
-                  }
-                
+                    .map((team) => {
+                      return (
+                        <option key={team.id} value={team.name}>
+                          {team.name}
+                        </option>
+                      );
+                    })}
                 </select>
-                
               </div>
+              {(() => {
+                const newArticles = articles.filter((article) => {
+                  if (selectedSport === "") {
+                    return true;
+                  }
+                  if (selectedSport !== "" && selectedTeam === "") {
+                    return article.sport.name === selectedSport;
+                  }
+                  if (selectedSport !== "" && selectedTeam !== "") {
+                    return (
+                      article.sport.name === selectedSport &&
+                      JSON.stringify(article).includes(selectedTeam)
+                    );
+                  }
+                });
 
-              hello
+                return newArticles.length > 0 ? (
+                  newArticles.map((article) => (
+<div className="w-full border p-2 m-1 rounded-md" key={article.id}>
+  <h1 className="text-xl font-bold">{article.title}</h1>
+  <h4 className="text-gray-600">{article.summary}</h4>
+  <button className="w-full bg-primarygreen text-white rounded-md py-1 mt-2 hover:bg-green-700">
+    Read more
+  </button>
+</div>
+
+                   
+                  ))
+                ) : (
+                  <div className="h-52 w-full flex justify-center items-center">
+                      <h1 className="text-xl text-gray-500 font-semibold">
+                        No Articles
+                      </h1>
+                    </div>
+                );
+              })()}
             </div>
           </div>
         </div>
