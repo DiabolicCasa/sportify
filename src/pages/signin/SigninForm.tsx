@@ -33,6 +33,7 @@ const reducer = (
 const SigninForm: React.FC = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
 
   const navigate = useNavigate()
   const handleChange = (
@@ -60,19 +61,21 @@ const SigninForm: React.FC = () => {
         }),
       });
 
+      const res = await response.json()
+      console.log(res)
       if (!response.ok) {
+        setError(res['errors'][0])
         throw new Error("Failed to sign in");
       }
 
       // Handle successful sign-in
       console.log("Signin successful");
-      const res = await response.json()
 
       localStorage.setItem(AUTH_TOKEN, JSON.stringify(res['auth_token']))
       localStorage.setItem(ISLOGGED, JSON.stringify(true))
-      localStorage.setItem(USER, JSON.stringify('user'))
+      localStorage.setItem(USER, JSON.stringify(res['user']))
 
-      console.log(res)
+      
       dispatch({ type: "RESET" });
       navigate("/home")
     } catch (error) {
@@ -136,6 +139,9 @@ const SigninForm: React.FC = () => {
             Sign in
           </button>
         </div>
+       <div className="flex justify-center">
+       <span className="text-red-500  text-sm text-center">{error}</span>
+       </div>
       </form>
       <p className="text-center text-gray-500 font-semibold text-sm mt-2">Don't have an account? <Link className="text-blue-600" to="/signup"> Signup now</Link></p>
     </div>

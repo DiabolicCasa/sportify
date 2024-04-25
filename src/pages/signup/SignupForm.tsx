@@ -72,7 +72,7 @@ const SignupForm: React.FC = () => {
       
       localStorage.setItem(AUTH_TOKEN, JSON.stringify(res['auth_token']))
       localStorage.setItem(ISLOGGED, JSON.stringify(true))
-      localStorage.setItem(USER, JSON.stringify('user'))
+      localStorage.setItem(USER, JSON.stringify(res['user']))
 
       console.log(res)
       dispatch({ type: "RESET" });

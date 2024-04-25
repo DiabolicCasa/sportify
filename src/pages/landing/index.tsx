@@ -41,23 +41,14 @@ const LandingPage: React.FC = () => {
   const [selectedTeam, setSelectedTeam] = useState("");
   const [liveMatchScore, setLiveMatchScore] = useState<MatchSummary[]>([])
 
-  const pageLoad = () => {
-    // Fetch initial data
-    fetchArticles(articleDispatch);
-    fetchSports(sportDispatch);
-    fetchTeams(teamDispatch);
-    fetchMatches(matchDispatch);
-  };
 
-  useEffect(() => {
-    pageLoad();
-  }, []);
 
   const fetchMatchScores = async () => {
     try {
       // Filter live matches
-      const liveMatches = matches.filter((item) => item.isRunning);
-  
+      console.log("matches : ", matches.length)
+      const liveMatches = await matches.filter((item) => item.isRunning);
+      console.log("Live matches : ", liveMatches.length)
       // Array to store match scores
       const matchScores : MatchSummary[] = [];
   
@@ -82,13 +73,25 @@ const LandingPage: React.FC = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       fetchMatchScores();
-    }, 10000); // 2 minutes in milliseconds
+    }, 60000); // 2 minutes in milliseconds
   
     // Clear interval on component unmount
     return () => clearInterval(intervalId);
   }, []);
   
 
+  const pageLoad = () => {
+    // Fetch initial data
+    fetchArticles(articleDispatch);
+    fetchSports(sportDispatch);
+    fetchTeams(teamDispatch);
+    fetchMatches(matchDispatch);
+    fetchMatchScores()
+  };
+
+  useEffect(() => {
+    pageLoad();
+  }, []);
 
   const handleTabChange = (tabIndex: number, sportId: number) => {
     setSelectedTab(tabIndex);

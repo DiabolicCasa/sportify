@@ -7,15 +7,19 @@ import Signin from "../pages/signin";
 import Signup from "../pages/signup";
 import ErrorPage from "../pages/error";
 import ProtectedRoute from "./ProtectedRoute";
-import Home from "../pages/home";
 import LandingPage from "../pages/landing";
+import ProfileHome from "../pages/profile";
   
   
 
 export  const mainRouter = createBrowserRouter([
     {
       path: "/home",
-      element: <ProtectedRoute component={Home}/>,
+      element: <ProtectedRoute component={LandingPage}/>,
+     
+    },{
+      path: "/profile",
+      element: <ProtectedRoute component={ProfileHome}/>,
      
     },
     {

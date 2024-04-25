@@ -27,10 +27,18 @@ const Navbar: React.FC = () => {
                       <a href="#" className="hover:text-primarygreen text-gray-800 font-semibold">Sports</a>
                       <a href="#" className="hover:text-primarygreen text-gray-800 font-semibold">Teams</a>
                   </div>
-                  {localStorage.getItem(ISLOGGED) ? <button onClick={logout} className='bg-red-500 text-white p-2 rounded-xl'> <i className='bx bx-log-out'></i>{" "}Log Out</button> : <div>
+                  {
+                  localStorage.getItem(ISLOGGED) ? 
+                  <div className='flex items-center'>
+                   <Link to="/profile"> <i className='bx bx-user-circle me-5 text-3xl'></i> </Link>
+                    <button onClick={logout} className='bg-red-500 text-white p-1 px-2 text-sm rounded-xl'> <i className='bx bx-log-out'></i>{" "}Log Out</button>
+                  </div> 
+                  : 
+                  <div>
                       <Link to="/signup" className='ml-2 p-2 px-4 bg-black hover:bg-primarygreen hover:text-black text-white rounded-md'>Signup</Link>
                       <Link to="/signin" className='ml-2 p-2 px-4 bg-black hover:bg-primarygreen hover:text-black text-white rounded-md'>Signin</Link>
-                  </div>}
+                  </div>
+                  }
               </div>
           </div>
 
