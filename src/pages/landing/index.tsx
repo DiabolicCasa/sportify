@@ -2,23 +2,15 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import {
-  useArticleDispatch,
   useArticleState,
 } from "../../context/articles/ArticleContext";
-import { fetchArticles } from "../../context/articles/actions";
 import ArticleDiv from "./ArticleDiv";
 import {
-  useSportDispatch,
   useSportState,
 } from "../../context/sports/SportContext";
-import { fetchSports } from "../../context/sports/actions";
-import { useTeamDispatch, useTeamState } from "../../context/teams/TeamContext";
-import { fetchTeams } from "../../context/teams/actions";
 import {
-  useMatchDispatch,
   useMatchState,
 } from "../../context/matches/MatchContext";
-import { fetchMatches } from "../../context/matches/actions";
 import {
   API_ENDPOINT,
   ISLOGGED,
@@ -26,6 +18,7 @@ import {
   PREFERRED_TEAM,
 } from "../../config/constants";
 import { MatchSummary } from "../../context/matches/types";
+import { useTeamState } from "../../context/teams/TeamContext";
 
 const LandingPage: React.FC = () => {
   const { articles } = useArticleState();
@@ -67,6 +60,12 @@ const LandingPage: React.FC = () => {
     }
   };
 
+
+  useEffect(() => {
+    fetchMatchScores()
+  }, []);
+
+  
   useEffect(() => {
     const intervalId = setInterval(() => {
       fetchMatchScores();
@@ -76,18 +75,8 @@ const LandingPage: React.FC = () => {
     return () => clearInterval(intervalId);
   }, []);
 
-  const pageLoad = () => {
-    // Fetch initial data
-    // fetchArticles(articleDispatch);
-    // fetchSports(sportDispatch);
-    // fetchTeams(teamDispatch);
-    // fetchMatches(matchDispatch);
-    fetchMatchScores();
-  };
 
-  useEffect(() => {
-    pageLoad();
-  }, []);
+
 
   const handleTabChange = (tabIndex: number, sportId: number) => {
     setSelectedTab(tabIndex);

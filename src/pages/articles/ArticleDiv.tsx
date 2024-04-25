@@ -48,6 +48,7 @@ const ArticleDiv: React.FC<Props> = ({ item }) => {
             <b></b>
           )}
         </p>
+        <button className="text-white bg-green-600 p-2 rounded-xl">read more</button>
       </div>
       <img
         src={item.thumbnail}
