@@ -1,7 +1,7 @@
 import React from 'react';
 import logo from "../assets/logo512.png"
 import { Link, useNavigate } from 'react-router-dom';
-import { AUTH_TOKEN, ISLOGGED, USER } from '../config/constants';
+import { AUTH_TOKEN, ISLOGGED, PREFERRED_SPORTS, PREFERRED_TEAM, USER } from '../config/constants';
 
 const Navbar: React.FC = () => {
     const navigate = useNavigate()
@@ -9,6 +9,8 @@ const Navbar: React.FC = () => {
         localStorage.removeItem(ISLOGGED)
         localStorage.removeItem(AUTH_TOKEN)
         localStorage.removeItem(USER)
+        localStorage.removeItem(PREFERRED_SPORTS)
+        localStorage.removeItem(PREFERRED_TEAM)
         navigate("/")
 
     }

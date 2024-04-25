@@ -15,10 +15,7 @@ type User = {
   id: number;
   name: string;
   email: string;
-  preferences: {
-    sports?: string[];
-    teams?: string[];
-  };
+ 
 };
 
 const ProfileHome: React.FC = () => {
@@ -106,7 +103,7 @@ const ProfileHome: React.FC = () => {
             <div>
               <span className="font-bold">Preferences:</span>
               <div className="ml-4">
-                {user.preferences.sports && (
+                {preferred_sports && (
                   <div className="mb-2">
                     <span className="font-bold">Sports:</span>{" "}
                     {preferred_sports.map((item) => {
@@ -118,7 +115,7 @@ const ProfileHome: React.FC = () => {
                     })}
                   </div>
                 )}
-                {user.preferences?.teams && (
+                {preferredTeams && (
                   <div>
                     <span className="font-bold">Teams:</span>{" "}
                     {preferredTeams.map((item) => {
