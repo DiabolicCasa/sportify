@@ -9,6 +9,7 @@ import ErrorPage from "../pages/error";
 import ProtectedRoute from "./ProtectedRoute";
 import LandingPage from "../pages/landing";
 import ProfileHome from "../pages/profile";
+import ArticlePage from "../pages/articles";
   
   
 
@@ -17,7 +18,13 @@ export  const mainRouter = createBrowserRouter([
       path: "/home",
       element: <ProtectedRoute component={LandingPage}/>,
      
-    },{
+    },  {
+      path: "/articles",
+      element: <ProtectedRoute component={ArticlePage}/>,
+     
+    },
+    
+    {
       path: "/profile",
       element: <ProtectedRoute component={ProfileHome}/>,
      

@@ -12,6 +12,7 @@ const Navbar: React.FC = () => {
         localStorage.removeItem(PREFERRED_SPORTS)
         localStorage.removeItem(PREFERRED_TEAM)
         navigate("/")
+        window.location.reload();
 
     }
 
@@ -26,10 +27,10 @@ const Navbar: React.FC = () => {
                       <div className="ml-2 text-2xl font-bold">Sportify</div>
                   </Link>
                   <div className="flex space-x-4">
-                      <a href="#" className="hover:text-primarygreen text-gray-800 font-semibold">Home</a>
-                      <a href="#" className="hover:text-primarygreen text-gray-800 font-semibold">Articles</a>
-                      <a href="#" className="hover:text-primarygreen text-gray-800 font-semibold">Sports</a>
-                      <a href="#" className="hover:text-primarygreen text-gray-800 font-semibold">Teams</a>
+                      <Link to="/home" className="hover:text-primarygreen text-gray-800 font-semibold">Home</Link>
+                      <Link to="/articles" className="hover:text-primarygreen text-gray-800 font-semibold">Articles</Link>
+                      <Link to="/matches" className="hover:text-primarygreen text-gray-800 font-semibold">Matches</Link>
+                      <Link to="/teams" className="hover:text-primarygreen text-gray-800 font-semibold">Teams</Link>
                   </div>
                   {
                   localStorage.getItem(ISLOGGED) ? 

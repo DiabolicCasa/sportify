@@ -19,74 +19,70 @@ import {
   useMatchState,
 } from "../../context/matches/MatchContext";
 import { fetchMatches } from "../../context/matches/actions";
-import { API_ENDPOINT } from "../../config/constants";
+import {
+  API_ENDPOINT,
+  ISLOGGED,
+  PREFERRED_SPORTS,
+  PREFERRED_TEAM,
+} from "../../config/constants";
 import { MatchSummary } from "../../context/matches/types";
 
 const LandingPage: React.FC = () => {
   const { articles } = useArticleState();
-  const articleDispatch = useArticleDispatch();
 
   const { sports } = useSportState();
-  const sportDispatch = useSportDispatch();
 
   const { teams } = useTeamState();
-  const teamDispatch = useTeamDispatch();
 
   const { matches } = useMatchState();
-  const matchDispatch = useMatchDispatch();
-
   const [selectedTab, setSelectedTab] = useState(0);
   const [selectedTabSport, setSelectedSportTab] = useState("");
   const [selectedSport, setSelectedSport] = useState("");
   const [selectedTeam, setSelectedTeam] = useState("");
-  const [liveMatchScore, setLiveMatchScore] = useState<MatchSummary[]>([])
-
-
+  const [liveMatchScore, setLiveMatchScore] = useState<MatchSummary[]>([]);
 
   const fetchMatchScores = async () => {
     try {
       // Filter live matches
-      console.log("matches : ", matches.length)
+      console.log("matches : ", matches.length);
       const liveMatches = await matches.filter((item) => item.isRunning);
-      console.log("Live matches : ", liveMatches.length)
+      console.log("Live matches : ", liveMatches.length);
       // Array to store match scores
-      const matchScores : MatchSummary[] = [];
-  
+      const matchScores: MatchSummary[] = [];
+
       // Fetch scores for each live match
       for (const match of liveMatches) {
         const response = await fetch(`${API_ENDPOINT}/matches/${match.id}`);
         const data = await response.json();
         // Assuming the API response contains the live match score
-        console.log(data)
+        console.log(data);
         matchScores.push(data);
       }
-  
+
       // Process the match scores as needed (e.g., update state)
-      console.log("Match Scores : ",matchScores);
-      setLiveMatchScore(matchScores)
+      console.log("Match Scores : ", matchScores);
+      setLiveMatchScore(matchScores);
     } catch (error) {
       console.error("Error fetching match scores:", error);
     }
   };
-  
 
   useEffect(() => {
     const intervalId = setInterval(() => {
       fetchMatchScores();
     }, 60000); // 2 minutes in milliseconds
-  
+
     // Clear interval on component unmount
     return () => clearInterval(intervalId);
   }, []);
-  
 
   const pageLoad = () => {
     // Fetch initial data
-    fetchArticles(articleDispatch);
-    fetchSports(sportDispatch);
-    fetchTeams(teamDispatch);
-    fetchMatches(matchDispatch);
-    fetchMatchScores()
+    // fetchArticles(articleDispatch);
+    // fetchSports(sportDispatch);
+    // fetchTeams(teamDispatch);
+    // fetchMatches(matchDispatch);
+    fetchMatchScores();
   };
 
   useEffect(() => {
@@ -101,8 +97,16 @@ const LandingPage: React.FC = () => {
     }
   };
 
+  const preferredTeams = JSON.parse(
+    localStorage.getItem(PREFERRED_TEAM) || "[]"
+  );
+  const preferredSports = JSON.parse(
+    localStorage.getItem(PREFERRED_SPORTS) || "[]"
+  );
+
   const handleSportChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedSport(event.target.value);
+    setSelectedTeam("");
   };
 
   const handleTeamChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -126,26 +130,30 @@ const LandingPage: React.FC = () => {
                 >
                   <div className="flex w-full  justify-between">
                     <h1>{match.sportName}</h1>
-                    <button onClick={fetchMatchScores}><i className="bx bx-refresh   text-xl"></i></button>
+                    <button onClick={fetchMatchScores}>
+                      <i className="bx bx-refresh   text-xl"></i>
+                    </button>
                   </div>
                   <h1 className="text-sm font-bold">
                     {match.name.split("at")[0]}
                   </h1>
                   <p className="text-gray-500 text-sm">{match.location}</p>
-                 
+
                   <div className="mt-2">
                     {match.teams.map((team) => (
                       <span
                         key={team.id}
                         className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
                       >
-                        {team.name}{"  "}{liveMatchScore.filter(item => item.id === match.id).map((item) =>{
-
-                          if(item.playingTeam === team.id)
-                            return  `(${item.score[team.name]})*`
-                          else
-                            return `(${item.score[team.name]})`
-                        })}
+                        {team.name}
+                        {"  "}
+                        {liveMatchScore
+                          .filter((item) => item.id === match.id)
+                          .map((item) => {
+                            if (item.playingTeam === team.id)
+                              return `(${item.score[team.name]})*`;
+                            else return `(${item.score[team.name]})`;
+                          })}
                       </span>
                     ))}
                   </div>
@@ -165,7 +173,7 @@ const LandingPage: React.FC = () => {
                   }`}
                   onClick={() => handleTabChange(0, 0)}
                 >
-                  All
+                  {localStorage.getItem(ISLOGGED) ? "Your Choice" : "All"}
                 </li>
                 {sports.map((sport, index) => (
                   <li
@@ -183,7 +191,21 @@ const LandingPage: React.FC = () => {
                 // Filter articles based on the selected tab and sport
                 const filteredArticles = articles.filter((article) => {
                   if (selectedTab === 0) {
-                    return true; // Show all articles if selectedTab is 0
+                    if (localStorage.getItem(ISLOGGED)) {
+                      const strr = JSON.stringify(article);
+                      return (
+                        preferredSports.some((element: string) =>
+                          strr.includes(element)
+                        ) ||
+                        preferredSports.some((element: string) =>
+                          strr.includes(element)
+                        )
+                      );
+                    }
+                    // Show all articles if selectedTab is 0
+                    else {
+                      return true;
+                    }
                   }
                   return article.sport.name === selectedTabSport; // Show articles for selected sport
                 });
@@ -217,11 +239,25 @@ const LandingPage: React.FC = () => {
                   onChange={handleSportChange}
                 >
                   <option value="">Select Sport</option>
-                  {sports.map((sport) => (
-                    <option key={sport.id} value={sport.name}>
-                      {sport.name}
-                    </option>
-                  ))}
+                  {sports.map((sport) => {
+                    if (localStorage.getItem(ISLOGGED)) {
+                      if (preferredSports.includes(sport.name)) {
+                        return (
+                          <option key={sport.id} value={sport.name}>
+                            {sport.name}
+                          </option>
+                        );
+                      }
+
+                      return null;
+                    }
+
+                    return (
+                      <option key={sport.id} value={sport.name}>
+                        {sport.name}
+                      </option>
+                    );
+                  })}
                 </select>
                 <select
                   className="py-2 mt-2 px-3 pe-9 block w-full border-gray-200 border rounded-lg text-sm "
@@ -237,6 +273,17 @@ const LandingPage: React.FC = () => {
                       return team.plays === selectedSport;
                     })
                     .map((team) => {
+                      if (localStorage.getItem(ISLOGGED)) {
+                        if (preferredTeams.includes(team.name)) {
+                          return (
+                            <option key={team.id} value={team.name}>
+                              {team.name}
+                            </option>
+                          );
+                        }
+
+                        return null;
+                      }
                       return (
                         <option key={team.id} value={team.name}>
                           {team.name}
