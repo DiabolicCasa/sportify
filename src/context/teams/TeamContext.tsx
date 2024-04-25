@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, ReactNode, useContext, useReducer } from "react";
 import { TeamDispatch, initialState, State } from "./types";
 import { teamReducer } from "./reducer";

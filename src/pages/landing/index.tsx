@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import {
@@ -13,6 +14,13 @@ import {
 import { fetchSports } from "../../context/sports/actions";
 import { useTeamDispatch, useTeamState } from "../../context/teams/TeamContext";
 import { fetchTeams } from "../../context/teams/actions";
+import {
+  useMatchDispatch,
+  useMatchState,
+} from "../../context/matches/MatchContext";
+import { fetchMatches } from "../../context/matches/actions";
+import { API_ENDPOINT } from "../../config/constants";
+import { MatchSummary } from "../../context/matches/types";
 
 const LandingPage: React.FC = () => {
   const { articles } = useArticleState();
@@ -24,30 +32,63 @@ const LandingPage: React.FC = () => {
   const { teams } = useTeamState();
   const teamDispatch = useTeamDispatch();
 
+  const { matches } = useMatchState();
+  const matchDispatch = useMatchDispatch();
+
   const [selectedTab, setSelectedTab] = useState(0);
   const [selectedTabSport, setSelectedSportTab] = useState("");
   const [selectedSport, setSelectedSport] = useState("");
   const [selectedTeam, setSelectedTeam] = useState("");
+  const [liveMatchScore, setLiveMatchScore] = useState<MatchSummary[]>([])
 
   const pageLoad = () => {
     // Fetch initial data
     fetchArticles(articleDispatch);
     fetchSports(sportDispatch);
     fetchTeams(teamDispatch);
+    fetchMatches(matchDispatch);
   };
+
   useEffect(() => {
     pageLoad();
   }, []);
 
-  useEffect(() => {
-    // Update articlesCopy based on selectedTab, selectedSport, etc.
-    // Use articles, selectedTab, selectedSport, etc. to filter and set articlesCopy
-  }, [articles, selectedTab, selectedSport]);
+  const fetchMatchScores = async () => {
+    try {
+      // Filter live matches
+      const liveMatches = matches.filter((item) => item.isRunning);
+  
+      // Array to store match scores
+      const matchScores : MatchSummary[] = [];
+  
+      // Fetch scores for each live match
+      for (const match of liveMatches) {
+        const response = await fetch(`${API_ENDPOINT}/matches/${match.id}`);
+        const data = await response.json();
+        // Assuming the API response contains the live match score
+        console.log(data)
+        matchScores.push(data);
+      }
+  
+      // Process the match scores as needed (e.g., update state)
+      console.log("Match Scores : ",matchScores);
+      setLiveMatchScore(matchScores)
+    } catch (error) {
+      console.error("Error fetching match scores:", error);
+    }
+  };
+  
 
   useEffect(() => {
-    // Update teamsCopy based on selectedSport, etc.
-    // Use teams, selectedSport, etc. to filter and set teamsCopy
-  }, [teams, selectedSport]);
+    const intervalId = setInterval(() => {
+      fetchMatchScores();
+    }, 10000); // 2 minutes in milliseconds
+  
+    // Clear interval on component unmount
+    return () => clearInterval(intervalId);
+  }, []);
+  
+
 
   const handleTabChange = (tabIndex: number, sportId: number) => {
     setSelectedTab(tabIndex);
@@ -71,8 +112,42 @@ const LandingPage: React.FC = () => {
       <div className="w-5/6 mx-auto bg-offwhite">
         <div className="w-full h-52 m-2 ">
           <h1 className="text-xl text-black font-bold">Live Games</h1>
-          <div className="h-5/6 w-9/10 rounded-md p-2 mx-auto shadow-md border">
+          <div className="h-5/6 flex w-9/10 rounded-md p-2 mx-auto shadow-md border overflow-auto">
             {/* Create todo div here */}
+            {matches
+              .filter((match) => match.isRunning)
+              .map((match) => (
+                <div
+                  key={match.id}
+                  className="bg-white w-1/3 border rounded-lg shadow-md p-4 m-2"
+                >
+                  <div className="flex w-full  justify-between">
+                    <h1>{match.sportName}</h1>
+                    <button onClick={fetchMatchScores}><i className="bx bx-refresh   text-xl"></i></button>
+                  </div>
+                  <h1 className="text-sm font-bold">
+                    {match.name.split("at")[0]}
+                  </h1>
+                  <p className="text-gray-500 text-sm">{match.location}</p>
+                 
+                  <div className="mt-2">
+                    {match.teams.map((team) => (
+                      <span
+                        key={team.id}
+                        className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+                      >
+                        {team.name}{"  "}{liveMatchScore.filter(item => item.id === match.id).map((item) =>{
+
+                          if(item.playingTeam === team.id)
+                            return  `(${item.score[team.name]})*`
+                          else
+                            return `(${item.score[team.name]})`
+                        })}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ))}
           </div>
         </div>
         <div className="flex flex-col md:flex-row justify-between">

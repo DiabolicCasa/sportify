@@ -32,3 +32,17 @@ export const initialState: State = {
         matches : [],
 };
       
+
+export type MatchSummary = {
+  id: number;
+  isRunning: boolean;
+  name: string;
+  location: string;
+  startsAt: string;
+  endsAt: string;
+  score: { [teamName: string]: string };
+  teams: { id: number; name: string }[];
+  sportName: string;
+  playingTeam: number;
+  story: string;
+};
