@@ -20,7 +20,7 @@ const ArticleDiv: React.FC<Props> = ({ item }) => {
   return (
     <div
       key={item.id}
-      className=" mt-2 w-full mx-auto bg-white  border rounded-md overflow-hidden flex"
+      className=" shadow-md z-10 mt-2 w-full mx-auto bg-white  border rounded-md overflow-hidden flex"
     >
       <div className="p-4 w-3/5 flex-1">
         <h2 className="text-lg font-semibold mb-2">{item.title}</h2>
