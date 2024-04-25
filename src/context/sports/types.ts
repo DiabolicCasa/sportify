@@ -1,6 +1,6 @@
 import React from "react";
 
-type Sport = {
+export type Sport = {
     id: number;
     name: string;
   };

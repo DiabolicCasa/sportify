@@ -13,6 +13,8 @@ const Navbar: React.FC = () => {
 
     }
 
+
+
   return (
     <><nav className="bg-white text-black-800 w-full shadow fixed top-0 z-50">
           <div className="w-5/6 container mx-auto py-4">

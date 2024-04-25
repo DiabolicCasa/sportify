@@ -1,5 +1,5 @@
 import React, { useReducer, useState } from "react";
-import { API_ENDPOINT, AUTH_TOKEN, ISLOGGED, USER } from "../../config/constants";
+import { API_ENDPOINT, AUTH_TOKEN, ISLOGGED, PREFERRED_SPORTS, PREFERRED_TEAM, USER } from "../../config/constants";
 import { Link, useNavigate } from "react-router-dom";
 
 interface SigninFormState {
@@ -74,6 +74,8 @@ const SigninForm: React.FC = () => {
       localStorage.setItem(AUTH_TOKEN, JSON.stringify(res['auth_token']))
       localStorage.setItem(ISLOGGED, JSON.stringify(true))
       localStorage.setItem(USER, JSON.stringify(res['user']))
+      localStorage.setItem(PREFERRED_SPORTS, JSON.stringify(res['user'].preferences.sports || []))
+      localStorage.setItem(PREFERRED_TEAM, JSON.stringify(res['user'].preferences.teams || []))
 
       
       dispatch({ type: "RESET" });
