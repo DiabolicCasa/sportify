@@ -30,7 +30,7 @@ const Navbar: React.FC = () => {
                       <Link to="/home" className="hover:text-primarygreen text-gray-800 font-semibold">Home</Link>
                       <Link to="/articles" className="hover:text-primarygreen text-gray-800 font-semibold">Articles</Link>
                       <Link to="/matches" className="hover:text-primarygreen text-gray-800 font-semibold">Matches</Link>
-                      <Link to="/teams" className="hover:text-primarygreen text-gray-800 font-semibold">Teams</Link>
+                      
                   </div>
                   {
                   localStorage.getItem(ISLOGGED) ? 

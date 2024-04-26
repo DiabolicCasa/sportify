@@ -5,7 +5,7 @@ type Team = {
   id :number,
   name  : string
 }
-type Match  = {
+export type Match  = {
   id : number,
   name  :  string,
   location :  string,

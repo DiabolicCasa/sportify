@@ -3,8 +3,8 @@ import {  useArticleState } from "../../context/articles/ArticleContext";
 import {  useSportState } from "../../context/sports/SportContext";
 import { ISLOGGED, PREFERRED_SPORTS } from "../../config/constants";
 import ArticleDiv from "./ArticleDiv";
-import ViewArticle from "./ViewArticle";
 import { Article } from "../../context/articles/types";
+import ViewArticle from "../../components/ViewArticle";
 
 type ArticleProps= {
   toggleViewModal : ()=>void,
@@ -64,7 +64,7 @@ const ArticleList : React.FC<ArticleProps> = ({isViewModalOpen, toggleViewModal}
                 <li
                   key={0}
                   className={`cursor-pointer ${
-                    selectedTab === 0 ? "font-bold" : ""
+                    selectedTab === 0 ? "font-bold underline underline-offset-8 decoration-4" : ""
                   }`}
                   onClick={() => handleTabChange(0, 0)}
                 >
@@ -74,7 +74,7 @@ const ArticleList : React.FC<ArticleProps> = ({isViewModalOpen, toggleViewModal}
                   <li
                     key={index + 1}
                     className={`cursor-pointer ${
-                      selectedTab === index + 1 ? "font-bold" : ""
+                      selectedTab === index + 1 ? "font-bold underline underline-offset-8 decoration-4" : ""
                     }`}
                     onClick={() => handleTabChange(index + 1, sport.id)}
                   >
