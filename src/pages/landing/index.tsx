@@ -1,16 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
-import {
-  useArticleState,
-} from "../../context/articles/ArticleContext";
+import { useArticleState } from "../../context/articles/ArticleContext";
 import ArticleDiv from "./ArticleDiv";
-import {
-  useSportState,
-} from "../../context/sports/SportContext";
-import {
-  useMatchState,
-} from "../../context/matches/MatchContext";
+import { useSportState } from "../../context/sports/SportContext";
+import { useMatchState } from "../../context/matches/MatchContext";
 import {
   API_ENDPOINT,
   ISLOGGED,
@@ -19,6 +13,8 @@ import {
 } from "../../config/constants";
 import { MatchSummary } from "../../context/matches/types";
 import { useTeamState } from "../../context/teams/TeamContext";
+import ViewArticle from "./ViewArticle";
+import { Article } from "../../context/articles/types";
 
 const LandingPage: React.FC = () => {
   const { articles } = useArticleState();
@@ -33,6 +29,15 @@ const LandingPage: React.FC = () => {
   const [selectedSport, setSelectedSport] = useState("");
   const [selectedTeam, setSelectedTeam] = useState("");
   const [liveMatchScore, setLiveMatchScore] = useState<MatchSummary[]>([]);
+
+  const [currentArticle, setCurrentArticle] = useState<Article>(articles[0]);
+
+  const [isViewModalOpen , setIsViewModalOpen] = useState(false)
+
+  const toggleViewModal = () =>{
+    console.log("toggle view modal called")
+    setIsViewModalOpen(!isViewModalOpen)
+  }
 
   const fetchMatchScores = async () => {
     try {
@@ -60,12 +65,10 @@ const LandingPage: React.FC = () => {
     }
   };
 
-
   useEffect(() => {
-    fetchMatchScores()
+    fetchMatchScores();
   }, []);
 
-  
   useEffect(() => {
     const intervalId = setInterval(() => {
       fetchMatchScores();
@@ -74,9 +77,6 @@ const LandingPage: React.FC = () => {
     // Clear interval on component unmount
     return () => clearInterval(intervalId);
   }, []);
-
-
-
 
   const handleTabChange = (tabIndex: number, sportId: number) => {
     setSelectedTab(tabIndex);
@@ -110,14 +110,27 @@ const LandingPage: React.FC = () => {
           <h1 className="text-xl text-black font-bold">Live Games</h1>
           <div className="h-5/6 flex w-9/10 rounded-md p-2 mx-auto shadow-md border overflow-auto">
             {/* Create todo div here */}
-            {matches
-              .filter((match) => match.isRunning)
-              .map((match) => (
+            {(() => {
+              const newMatches = matches.filter((match) => {
+                if (localStorage.getItem(ISLOGGED)) {
+                  return (
+                    match.isRunning && preferredSports.includes(match.sportName)
+                  );
+                } else {
+                  return match.isRunning;
+                }
+              });
+
+              if (newMatches.length === 0) {
+                return <p className=" mx-auto my-auto font-semibold ">No live matches available</p>;
+              }
+
+              return newMatches.map((match) => (
                 <div
                   key={match.id}
                   className="bg-white w-1/3 border rounded-lg shadow-md p-4 m-2"
                 >
-                  <div className="flex w-full  justify-between">
+                  <div className="flex w-full justify-between">
                     <h1>{match.sportName}</h1>
                     <button onClick={fetchMatchScores}>
                       <i className="bx bx-refresh   text-xl"></i>
@@ -147,7 +160,8 @@ const LandingPage: React.FC = () => {
                     ))}
                   </div>
                 </div>
-              ))}
+              ));
+            })()}
           </div>
         </div>
         <div className="flex flex-col md:flex-row justify-between">
@@ -203,7 +217,7 @@ const LandingPage: React.FC = () => {
                 if (filteredArticles.length > 0) {
                   // If there are filtered articles, map and display them
                   return filteredArticles.map((article) => (
-                    <ArticleDiv key={article.id} item={article} />
+                    <ArticleDiv setCurrentArticle={setCurrentArticle} toggleViewModal={toggleViewModal} key={article.id} item={article} />
                   ));
                 } else {
                   // If there are no filtered articles, display "No Articles" message
@@ -309,7 +323,10 @@ const LandingPage: React.FC = () => {
                       <h4 className="text-gray-600 text-sm">
                         {article.summary}
                       </h4>
-                      <button className="w-full bg-primarygreen text-white rounded-md py-1 mt-2 hover:bg-green-700">
+                      <button onClick={()=>{
+                        setCurrentArticle(article)
+                        toggleViewModal()
+                      }} className="w-full bg-primarygreen text-white rounded-md py-1 mt-2 hover:bg-green-700">
                         Read more
                       </button>
                     </div>
@@ -326,6 +343,7 @@ const LandingPage: React.FC = () => {
           </div>
         </div>
       </div>
+      <ViewArticle article={currentArticle} isViewModalOpen={isViewModalOpen} toggleViewModal={toggleViewModal}/>
     </>
   );
 };
