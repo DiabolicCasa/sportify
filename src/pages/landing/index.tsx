@@ -11,7 +11,6 @@ import {
   PREFERRED_TEAM,
 } from "../../config/constants";
 import { useTeamState } from "../../context/teams/TeamContext";
-import { Article } from "../../context/articles/types";
 import ViewArticle from "../../components/ViewArticle";
 import LiveMatches from "../../components/LiveMatches";
 
@@ -40,7 +39,7 @@ const LandingPage: React.FC = () => {
 
   const handleTabChange = (tabIndex: number, sportId: number) => {
     setSelectedTab(tabIndex);
-    // console.group(sportId);
+    console.group(sportId);
     if (tabIndex > 0) {
       setSelectedSportTab(sports[tabIndex - 1].name);
     }
