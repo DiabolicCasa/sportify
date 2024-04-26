@@ -41,6 +41,7 @@ const ArticleList : React.FC<ArticleProps> = ({isViewModalOpen, toggleViewModal}
 
       const identifyArticle = (article : Article) =>{
         setCurrentArticle(article)
+        console.log("Current article: ",currentArticle)
         toggleViewModal()
       }
     // const pageLoad = () => {

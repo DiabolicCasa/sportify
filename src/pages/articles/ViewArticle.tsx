@@ -9,7 +9,7 @@ type ViewArticleProps = {
 };
 
 type ArticleContent = {
-  id: number;
+  id: number | null;
   title: string | null;
   summary: string | null;
   thumbnail: string | null;
@@ -21,7 +21,7 @@ type ArticleContent = {
   content: string | null;
   teams:
     | {
-        id: number;
+        id: number | null;
         name: string | null;
       }[]
     | null;
@@ -38,6 +38,9 @@ const ViewArticle: React.FC<ViewArticleProps> = ({
 
   useEffect(() => {
     const fetchArticleData = async () => {
+      if (!article) {
+        return; // Do nothing if article is null
+      }
       const url = `${API_ENDPOINT}/articles/${article.id}`;
       try {
         const response = await fetch(url);
@@ -46,9 +49,10 @@ const ViewArticle: React.FC<ViewArticleProps> = ({
         }
         const data: ArticleContent = await response.json();
         setArticleContent(data);
-        console.log(data)
+        console.log(data);
       } catch (error) {
         console.error("Fetch error:", error);
+        setArticleContent(null);
       }
     };
 
@@ -58,7 +62,7 @@ const ViewArticle: React.FC<ViewArticleProps> = ({
       // Reset article content when modal is closed
       setArticleContent(null);
     }
-  }, [isViewModalOpen, article.id]);
+  }, [isViewModalOpen, article]);
 
   const closeModal = () => {
     setArticleContent(null);
@@ -73,30 +77,41 @@ const ViewArticle: React.FC<ViewArticleProps> = ({
     <div className="fixed inset-0 flex items-center justify-center">
       <div className="fixed inset-0 bg-black opacity-50"></div>
       <div className="bg-white w-5/6 p-8 rounded-lg shadow-lg z-10">
-        <h1 className="text-2xl font-bold mb-4">{articleContent?.title}</h1>
-        <p className="mb-4">{articleContent?.summary}</p>
-        {articleContent?.content && (
-          <div className="mb-4">
-            <h2 className="text-lg font-bold mb-2">Content:</h2>
-            <p>{articleContent.content}</p>
+
+        {
+            articleContent ? 
+            <div>
+            <h1 className="text-2xl font-bold mb-4">{articleContent?.title}</h1>
+            <p className="mb-4">{articleContent?.summary}</p>
+            {articleContent?.content && (
+              <div className="mb-4">
+                <h2 className="text-lg font-bold mb-2">Content:</h2>
+                <p>{articleContent.content}</p>
+              </div>
+            )}
+            {articleContent?.teams && (
+              <div className="mb-4">
+                <h2 className="text-lg font-bold mb-2">Teams:</h2>
+                <ul>
+                  {articleContent.teams.map((team) => (
+                    <li key={team.id}>{team.name}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {articleContent?.sport && (
+              <div className="mb-4">
+                <h2 className="text-lg font-bold mb-2">Sport:</h2>
+                <p>{articleContent.sport.name}</p>
+              </div>
+            )}
           </div>
-        )}
-        {articleContent?.teams && (
-          <div className="mb-4">
-            <h2 className="text-lg font-bold mb-2">Teams:</h2>
-            <ul>
-              {articleContent.teams.map((team) => (
-                <li key={team.id}>{team.name}</li>
-              ))}
-            </ul>
+          :
+          <div className="w-full flex justify-center items-center h-32">
+            <h1 className="font-semibold flex items-center text-3xl text-gray-900"><i className='bx font-3xl font-bold bx-loader bx-spin' ></i> {" "}Loading</h1>
           </div>
-        )}
-        {articleContent?.sport && (
-          <div className="mb-4">
-            <h2 className="text-lg font-bold mb-2">Sport:</h2>
-            <p>{articleContent.sport.name}</p>
-          </div>
-        )}
+        }
+       
         <button
           onClick={closeModal}
           className="bg-red-500 p-2 rounded-xl text-white"
