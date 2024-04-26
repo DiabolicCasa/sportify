@@ -27,8 +27,8 @@ const LandingPage: React.FC = () => {
   const [selectedSport, setSelectedSport] = useState("");
   const [selectedTeam, setSelectedTeam] = useState("");
  
-  const [currentArticle, setCurrentArticle] = useState<Article >(
-  {}
+  const [currentArticle, setCurrentArticle] = useState(
+    articles[0] 
   );
 
   const [isViewModalOpen , setIsViewModalOpen] = useState(false)
