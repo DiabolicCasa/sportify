@@ -10,6 +10,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import LandingPage from "../pages/landing";
 import ProfileHome from "../pages/profile";
 import ArticlePage from "../pages/articles";
+import MatchIndex from "../pages/matches";
   
   
 
@@ -17,6 +18,10 @@ export  const mainRouter = createBrowserRouter([
     {
       path: "/home",
       element: <ProtectedRoute component={LandingPage}/>,
+     
+    },{
+      path: "/matches",
+      element: <ProtectedRoute component={MatchIndex}/>,
      
     },  {
       path: "/articles",
