@@ -27,9 +27,9 @@ const LandingPage: React.FC = () => {
   const [selectedSport, setSelectedSport] = useState("");
   const [selectedTeam, setSelectedTeam] = useState("");
  
-const [currentArticle, setCurrentArticle] = useState<Article >(
-  articles[0] 
-);
+  const [currentArticle, setCurrentArticle] = useState<Article >(
+  {}
+  );
 
   const [isViewModalOpen , setIsViewModalOpen] = useState(false)
 
@@ -40,7 +40,7 @@ const [currentArticle, setCurrentArticle] = useState<Article >(
 
   const handleTabChange = (tabIndex: number, sportId: number) => {
     setSelectedTab(tabIndex);
-    console.group(sportId);
+    // console.group(sportId);
     if (tabIndex > 0) {
       setSelectedSportTab(sports[tabIndex - 1].name);
     }
