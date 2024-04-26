@@ -2,10 +2,12 @@ import React from "react";
 import { Article } from "../../context/articles/types";
 
 type Props = {
-  item: Article;
+  item: Article,
+  isViewModalOpen :boolean,
+  identifyArticle:(article:Article)=>void
 };
 
-const ArticleDiv: React.FC<Props> = ({ item }) => {
+const ArticleDiv: React.FC<Props> = ({ item ,identifyArticle}) => {
   const stringToDate = (dateString: string): string => {
     const date = new Date(dateString);
 
@@ -48,7 +50,7 @@ const ArticleDiv: React.FC<Props> = ({ item }) => {
             <b></b>
           )}
         </p>
-        <button className="text-white bg-green-600 p-2 rounded-xl">read more</button>
+        <button onClick={( )=>{identifyArticle(item)}} className="text-white bg-green-600 p-2 rounded-xl">read more</button>
       </div>
       <img
         src={item.thumbnail}

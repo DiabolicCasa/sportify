@@ -3,8 +3,15 @@ import {  useArticleState } from "../../context/articles/ArticleContext";
 import {  useSportState } from "../../context/sports/SportContext";
 import { ISLOGGED, PREFERRED_SPORTS } from "../../config/constants";
 import ArticleDiv from "./ArticleDiv";
+import ViewArticle from "./ViewArticle";
+import { Article } from "../../context/articles/types";
 
-const ArticleList : React.FC = () =>{
+type ArticleProps= {
+  toggleViewModal : ()=>void,
+  isViewModalOpen : boolean
+}
+
+const ArticleList : React.FC<ArticleProps> = ({isViewModalOpen, toggleViewModal}) =>{
 
 
 
@@ -12,6 +19,9 @@ const ArticleList : React.FC = () =>{
 
     const { sports } = useSportState();
     const [selectedTab, setSelectedTab] = useState(0);
+
+    const [currentArticle, setCurrentArticle] = useState<Article>(articles[0]);
+
     const [selectedTabSport, setSelectedSportTab] = useState("");
 
 
@@ -27,6 +37,12 @@ const ArticleList : React.FC = () =>{
           setSelectedSportTab(sports[tabIndex - 1].name);
         }
       };
+
+
+      const identifyArticle = (article : Article) =>{
+        setCurrentArticle(article)
+        toggleViewModal()
+      }
     // const pageLoad = () => {
     //     // Fetch initial data
     //     fetchArticles(articleDispatch);
@@ -92,7 +108,7 @@ const ArticleList : React.FC = () =>{
                 if (filteredArticles.length > 0) {
                   // If there are filtered articles, map and display them
                   return filteredArticles.map((article) => (
-                    <ArticleDiv key={article.id} item={article} />
+                    <ArticleDiv key={article.id} isViewModalOpen={isViewModalOpen} identifyArticle={identifyArticle} item={article} />
                   ));
                 } else {
                   // If there are no filtered articles, display "No Articles" message
@@ -106,6 +122,7 @@ const ArticleList : React.FC = () =>{
                 }
               })()}
             </div>
+            <ViewArticle article={currentArticle} isViewModalOpen={isViewModalOpen} toggleViewModal={toggleViewModal}/>
         </div>
     )
 }
