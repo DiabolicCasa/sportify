@@ -68,54 +68,47 @@ Sportify is a Sports News and Scores Dashboard web application developed as a ca
 3. Browse sports news, filter articles, and view live scores.
 
 ## Output
+#### [Live Application Link](https://sportify-gb.vercel.app/)
+#### [Video Demo Link](https://youtu.be/Ca35HbzZUIo)
 
 <figure style="margin-bottom:10px ;padding:10px">
-  <img src="output/dashboard.png" alt="Dashboard" style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); border: 0px solid black; border-radius: 10px">
-  <figcaption>Dashboard</figcaption>
+  <img src="output/dashboard.png" height="300px alt="Dashboard" style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); border: 0px solid black; border-radius: 10px">
 </figure>
 <figure>
-  <img src="output/userprofile.png" alt="User Profile" style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); border: 0px solid black; border-radius: 10px">
-  <figcaption>User Profile</figcaption>
+  <img src="output/userprofile.png"  height="300px" alt="User Profile" style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); border: 0px solid black; border-radius: 10px">
 </figure>
 
 
 <figure style="margin-bottom:10px ;padding:10px">
-  <img src="output/changepreference.png" alt="Change Preference" style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); border: 0px solid black; border-radius: 10px">
-  <figcaption>Change Preference</figcaption>
+  <img src="output/changepreference.png" height="300px"  alt="Change Preference" style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); border: 0px solid black; border-radius: 10px">
 </figure>
 
 <figure style="margin-bottom:10px ;padding:10px">
-  <img src="output/articlepage.png" alt="Article Page" style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); border: 0px solid black; border-radius: 10px">
-  <figcaption>Article Page</figcaption>
+  <img src="output/articlepage.png"  height="300px" alt="Article Page" style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); border: 0px solid black; border-radius: 10px">
 </figure>
 
 <figure style="margin-bottom:10px ;padding:10px">
-  <img src="output/articlemodal.png" alt="Article Modal" style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); border: 0px solid black; border-radius: 10px">
-  <figcaption>Article Modal</figcaption>
+  <img src="output/articlemodal.png" height="300px"  alt="Article Modal" style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); border: 0px solid black; border-radius: 10px">
 </figure>
 
 
 
 <figure style="margin-bottom:10px ;padding:10px">
-  <img src="output/matchpage.png" alt="Match Page" style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); border: 0px solid black; border-radius: 10px">
-  <figcaption>Match Page</figcaption>
+  <img src="output/matchpage.png" height="300px"  alt="Match Page" style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); border: 0px solid black; border-radius: 10px">
 </figure>
 
 <figure style="margin-bottom:10px ;padding:10px">
-  <img src="output/matchmodal.png" alt="Match Modal" style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); border: 0px solid black; border-radius: 10px">
-  <figcaption>Match Modal</figcaption>
+  <img src="output/matchmodal.png"  height="300px" alt="Match Modal" style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); border: 0px solid black; border-radius: 10px">
 </figure>
 
 
 
 <figure style="margin-bottom:10px ;padding:10px">
-  <img src="output/signin.png" alt="Sign In" style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); border: 0px solid black; border-radius: 10px">
-  <figcaption>Sign In</figcaption>
+  <img src="output/signin.png" height="300px"  alt="Sign In" style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); border: 0px solid black; border-radius: 10px">
 </figure>
 
 <figure style="margin-bottom:10px ;padding:10px">
-  <img src="output/signup.png" alt="Sign Up" style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); border: 0px solid black; border-radius: 10px">
-  <figcaption>Sign Up</figcaption>
+  <img src="output/signup.png"  height="300px" alt="Sign Up" style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); border: 0px solid black; border-radius: 10px">
 </figure>
 
 
