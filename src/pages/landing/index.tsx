@@ -1,5 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import Navbar from "../../components/Navbar";
 import { useArticleState } from "../../context/articles/ArticleContext";
 import ArticleDiv from "./ArticleDiv";
@@ -15,7 +14,6 @@ import ViewArticle from "../../components/ViewArticle";
 import LiveMatches from "../../components/LiveMatches";
 
 const LandingPage: React.FC = () => {
-
   const { articles } = useArticleState();
   const { sports } = useSportState();
   const { teams } = useTeamState();
@@ -25,26 +23,12 @@ const LandingPage: React.FC = () => {
   const [selectedTabSport, setSelectedSportTab] = useState("");
   const [selectedSport, setSelectedSport] = useState("");
   const [selectedTeam, setSelectedTeam] = useState("");
- 
-  const [currentArticle, setCurrentArticle] = useState(
-    articles[0] 
-  );
+  const [currentArticle, setCurrentArticle] = useState(articles[0]);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
 
-  const [isViewModalOpen , setIsViewModalOpen] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // State to manage menu visibility
 
-  const toggleViewModal = () =>{
-    console.log("toggle view modal called")
-    setIsViewModalOpen(!isViewModalOpen)
-  }
-
-  const handleTabChange = (tabIndex: number, sportId: number) => {
-    setSelectedTab(tabIndex);
-    console.group(sportId);
-    if (tabIndex > 0) {
-      setSelectedSportTab(sports[tabIndex - 1].name);
-    }
-  };
-
+  
   const preferredTeams = JSON.parse(
     localStorage.getItem(PREFERRED_TEAM) || "[]"
   );
@@ -52,10 +36,29 @@ const LandingPage: React.FC = () => {
     localStorage.getItem(PREFERRED_SPORTS) || "[]"
   );
 
+  const toggleViewModal = () => {
+    setIsViewModalOpen(!isViewModalOpen);
+  };
+
+  const handleTabChange = (tabIndex: number) => {
+
+    setSelectedTab(tabIndex);
+    if (tabIndex > 0) {
+      setSelectedSportTab(sports[tabIndex - 1].name);
+    }
+    setIsMenuOpen(false);
+  };
+
+  const handleMenuToggle = () => {
+    setIsMenuOpen(!isMenuOpen); // Toggle menu visibility
+  };
+
   const handleSportChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedSport(event.target.value);
     setSelectedTeam("");
   };
+
+  
 
   const handleTeamChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedTeam(event.target.value);
@@ -64,36 +67,80 @@ const LandingPage: React.FC = () => {
   return (
     <>
       <Navbar />
-      <div className="w-5/6 mx-auto bg-offwhite">
-       <LiveMatches matches={matches}/>
+      <div className="w-11/12 md:w-5/6 lg:w-4/5 mx-auto bg-offwhite">
+        <LiveMatches matches={matches} />
         <div className="flex flex-col md:flex-row justify-between">
           <div className="w-full md:w-3/4 m-2">
             <h1 className="text-xl text-black font-bold">Trending News</h1>
             <div className="w-full border rounded-md p-2 mx-auto shadow-md mt-2 overflow-y-auto">
-              <ul className="flex w-full p-2 justify-between">
+<div className="block md:hidden"> 
+          <button
+            onClick={handleMenuToggle}
+            className="block w-full p-2 flex items-center justify-around text-center border rounded"
+          >
+            {selectedTab === 0 ? "Your Choice" : selectedTabSport} <i className='bx text-2xl font-normal bxs-chevron-down' ></i>
+          </button>
+          {isMenuOpen && (
+            <ul className="flex flex-col w-full p-2">
+              <li
+                key={0}
+                className={`cursor-pointer ${
+                  selectedTab === 0
+                    ? "font-bold "
+                    : ""
+                }`}
+                onClick={() => handleTabChange(0)}
+              >
+                {localStorage.getItem(ISLOGGED) ? "Your Choice" : "All"}
+              </li>
+              {sports.map((sport, index) => (
                 <li
-                  key={0}
+                  key={index + 1}
                   className={`cursor-pointer ${
-                    selectedTab === 0 ? "font-bold underline underline-offset-8 decoration-4" : ""
+                    selectedTab === index + 1
+                      ? "font-bold underline underline-offset-8 decoration-4"
+                      : ""
                   }`}
-                  onClick={() => handleTabChange(0, 0)}
+                  onClick={() => handleTabChange(index + 1)}
                 >
-                  {localStorage.getItem(ISLOGGED) ? "Your Choice" : "All"}
+                  {sport.name}
                 </li>
-                {sports.map((sport, index) => (
-                  <li
-                    key={index + 1}
-                    className={`cursor-pointer ${
-                      selectedTab === index + 1 ? "font-bold underline underline-offset-8 decoration-4" : ""
-                    }`}
-                    onClick={() => handleTabChange(index + 1, sport.id)}
-                  >
-                    {sport.name}
-                  </li>
-                ))}
-              </ul>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        {/* Regular horizontal menu for larger screens */}
+        <div className="hidden md:block">
+          <ul className="flex w-full p-2 justify-between">
+            <li
+              key={0}
+              className={`cursor-pointer ${
+                selectedTab === 0
+                  ? "font-bold underline underline-offset-8 decoration-4"
+                  : ""
+              }`}
+              onClick={() => handleTabChange(0)}
+            >
+              {localStorage.getItem(ISLOGGED) ? "Your Choice" : "All"}
+            </li>
+            {sports.map((sport, index) => (
+              <li
+                key={index + 1}
+                className={`cursor-pointer ${
+                  selectedTab === index + 1
+                    ? "font-bold underline underline-offset-8 decoration-4"
+                    : ""
+                }`}
+                onClick={() => handleTabChange(index + 1)}
+              >
+                {sport.name}
+              </li>
+            ))}
+          </ul>
+        </div>
+
               {(() => {
-                // Filter articles based on the selected tab and sport
                 const filteredArticles = articles.filter((article) => {
                   if (selectedTab === 0) {
                     if (localStorage.getItem(ISLOGGED)) {
@@ -106,23 +153,23 @@ const LandingPage: React.FC = () => {
                           strr.includes(element)
                         )
                       );
-                    }
-                    // Show all articles if selectedTab is 0
-                    else {
+                    } else {
                       return true;
                     }
                   }
-                  return article.sport.name === selectedTabSport; // Show articles for selected sport
+                  return article.sport.name === selectedTabSport;
                 });
 
-                // Check if there are any filtered articles
                 if (filteredArticles.length > 0) {
-                  // If there are filtered articles, map and display them
                   return filteredArticles.map((article) => (
-                    <ArticleDiv setCurrentArticle={setCurrentArticle} toggleViewModal={toggleViewModal} key={article.id} item={article} />
+                    <ArticleDiv
+                      setCurrentArticle={setCurrentArticle}
+                      toggleViewModal={toggleViewModal}
+                      key={article.id}
+                      item={article}
+                    />
                   ));
                 } else {
-                  // If there are no filtered articles, display "No Articles" message
                   return (
                     <div className="h-52 w-full flex justify-center items-center">
                       <h1 className="text-xl text-gray-500 font-semibold">
@@ -225,10 +272,13 @@ const LandingPage: React.FC = () => {
                       <h4 className="text-gray-600 text-sm">
                         {article.summary}
                       </h4>
-                      <button onClick={()=>{
-                        setCurrentArticle(article)
-                        toggleViewModal()
-                      }} className="w-full bg-primarygreen text-white rounded-md py-1 mt-2 hover:bg-green-700">
+                      <button
+                        onClick={() => {
+                          setCurrentArticle(article);
+                          toggleViewModal();
+                        }}
+                        className="w-full bg-primarygreen text-white rounded-md py-1 mt-2 hover:bg-green-700"
+                      >
                         Read more
                       </button>
                     </div>
@@ -245,7 +295,11 @@ const LandingPage: React.FC = () => {
           </div>
         </div>
       </div>
-      <ViewArticle article={currentArticle} isViewModalOpen={isViewModalOpen} toggleViewModal={toggleViewModal}/>
+      <ViewArticle
+        article={currentArticle}
+        isViewModalOpen={isViewModalOpen}
+        toggleViewModal={toggleViewModal}
+      />
     </>
   );
 };

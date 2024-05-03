@@ -24,18 +24,24 @@ const ArticleList: React.FC<ArticleProps> = ({ isViewModalOpen, toggleViewModal 
 
   const [selectedTabSport, setSelectedSportTab] = useState("");
 
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // State to manage menu visibility
 
+
+  const handleMenuToggle = () => {
+    setIsMenuOpen(!isMenuOpen); // Toggle menu visibility
+  };
 
   const preferredSports = JSON.parse(
     localStorage.getItem(PREFERRED_SPORTS) || "[]"
   );
 
-  const handleTabChange = (tabIndex: number, sportId: number) => {
+  const handleTabChange = (tabIndex: number) => {
     setSelectedTab(tabIndex);
-    console.group(sportId);
+    // console.group(sportId);
     if (tabIndex > 0) {
       setSelectedSportTab(sports[tabIndex - 1].name);
     }
+    setIsMenuOpen(false)
   };
 
 
@@ -44,7 +50,7 @@ const ArticleList: React.FC<ArticleProps> = ({ isViewModalOpen, toggleViewModal 
     console.log("Current article: ", currentArticle)
     toggleViewModal()
   }
-  
+
 
 
   return (
@@ -52,26 +58,72 @@ const ArticleList: React.FC<ArticleProps> = ({ isViewModalOpen, toggleViewModal 
 
 
       <div className="w-full border rounded-md p-2 mx-auto shadow-md mt-2 overflow-y-auto">
-        <ul className="flex  w-full p-2 justify-between">
-          <li
-            key={0}
-            className={`cursor-pointer ${selectedTab === 0 ? "font-bold underline underline-offset-8 decoration-4" : ""
-              }`}
-            onClick={() => handleTabChange(0, 0)}
+       <div className="block md:hidden"> 
+          <button
+            onClick={handleMenuToggle}
+            className="block w-full p-2 flex items-center justify-around text-center border rounded"
           >
-            {localStorage.getItem(ISLOGGED) ? "Your Choice" : "All"}
-          </li>
-          {sports.map((sport, index) => (
-            <li
-              key={index + 1}
-              className={`cursor-pointer ${selectedTab === index + 1 ? "font-bold underline underline-offset-8 decoration-4" : ""
+            {selectedTab === 0 ? "Your Choice" : selectedTabSport} <i className='bx text-2xl font-normal bxs-chevron-down' ></i>
+          </button>
+          {isMenuOpen && (
+            <ul className="flex flex-col w-full p-2">
+              <li
+                key={0}
+                className={`cursor-pointer ${
+                  selectedTab === 0
+                    ? "font-bold "
+                    : ""
                 }`}
-              onClick={() => handleTabChange(index + 1, sport.id)}
+                onClick={() => handleTabChange(0)}
+              >
+                {localStorage.getItem(ISLOGGED) ? "Your Choice" : "All"}
+              </li>
+              {sports.map((sport, index) => (
+                <li
+                  key={index + 1}
+                  className={`cursor-pointer ${
+                    selectedTab === index + 1
+                      ? "font-bold "
+                      : ""
+                  }`}
+                  onClick={() => handleTabChange(index + 1)}
+                >
+                  {sport.name}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        {/* Regular horizontal menu for larger screens */}
+        <div className="hidden md:block">
+          <ul className="flex w-full p-2 justify-between">
+            <li
+              key={0}
+              className={`cursor-pointer ${
+                selectedTab === 0
+                  ? "font-bold underline underline-offset-8 decoration-4"
+                  : ""
+              }`}
+              onClick={() => handleTabChange(0)}
             >
-              {sport.name}
+              {localStorage.getItem(ISLOGGED) ? "Your Choice" : "All"}
             </li>
-          ))}
-        </ul>
+            {sports.map((sport, index) => (
+              <li
+                key={index + 1}
+                className={`cursor-pointer ${
+                  selectedTab === index + 1
+                    ? "font-bold underline underline-offset-8 decoration-4"
+                    : ""
+                }`}
+                onClick={() => handleTabChange(index + 1)}
+              >
+                {sport.name}
+              </li>
+            ))}
+          </ul>
+        </div>
         {(() => {
           // Filter articles based on the selected tab and sport
           const filteredArticles = articles.filter((article) => {
