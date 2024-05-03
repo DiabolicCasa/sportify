@@ -65,7 +65,7 @@ const MatchModal: React.FC<Props> = ({ isModalOpen, match, closeModal }) => {
         </div>
         {isLoading ? (
           <div className="w-full flex justify-center m-10">
-            <p className="font-semibold mx-auto">Loading...</p>
+            <p className="font-semibold flex items-center mx-auto"><i className='mr-2 text-3xl bx bx-loader-alt bx-spin bx-rotate-90' ></i> Loading...</p>
           </div>
         ) : matchData ? (
           <>
