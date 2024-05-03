@@ -6,10 +6,7 @@ interface ChangePasswordModalProps {
   onClose: () => void;
 }
 
-const ChangePassword: React.FC<ChangePasswordModalProps> = ({
-  isOpen,
-  onClose,
-}) => {
+const ChangePassword: React.FC<ChangePasswordModalProps> = ({ isOpen, onClose }) => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [msg, setMsg] = useState("");
@@ -18,16 +15,13 @@ const ChangePassword: React.FC<ChangePasswordModalProps> = ({
     e.preventDefault();
     console.log("Current Password:", currentPassword);
     console.log("New Password:", newPassword);
-
     const authTokenString = localStorage.getItem(AUTH_TOKEN);
     if (!authTokenString) {
       console.error("Authorization token is missing.");
       return;
     }
-
     const authToken = JSON.parse(authTokenString);
     console.log(authToken);
-
     try {
       const response = await fetch(`${API_ENDPOINT}/user/password`, {
         method: "PATCH",
@@ -40,15 +34,12 @@ const ChangePassword: React.FC<ChangePasswordModalProps> = ({
           new_password: newPassword,
         }),
       });
-
       const res = await response.json();
       console.log(res);
-      setMsg(res['message']);
+      setMsg(res["message"]);
       if (!response.ok) {
         throw new Error("Failed to update password");
       }
-
-      
       onClose();
     } catch (error) {
       console.error("Error updating password:", error);
@@ -60,15 +51,12 @@ const ChangePassword: React.FC<ChangePasswordModalProps> = ({
   }
 
   return (
-    <div className="fixed bg-black bg-opacity-25 inset-0 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl w-1/3 p-6">
+    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-25">
+      <div className="bg-white rounded-lg shadow-xl p-6 max-w-md w-full md:w-1/3">
         <h2 className="text-xl font-semibold mb-4">Change Password</h2>
         <form onSubmit={handleSubmit}>
           <div className="">
-            <label
-              htmlFor="currentPassword"
-              className="sr-only block font-bold "
-            >
+            <label htmlFor="currentPassword" className="sr-only block font-bold">
               Current Password
             </label>
             <input
@@ -77,11 +65,11 @@ const ChangePassword: React.FC<ChangePasswordModalProps> = ({
               value={currentPassword}
               placeholder="Current Password"
               onChange={(e) => setCurrentPassword(e.target.value)}
-              className="border border rounded-t-lg focus:border-primarygreen p-2 w-full focus:outline-none  focus:primarygreen"
+              className="border border rounded-t-lg focus:border-primarygreen p-2 w-full focus:outline-none focus:primarygreen"
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="newPassword" className="sr-only block font-bold ">
+            <label htmlFor="newPassword" className="sr-only block font-bold">
               New Password
             </label>
             <input
@@ -90,13 +78,13 @@ const ChangePassword: React.FC<ChangePasswordModalProps> = ({
               placeholder="New Password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              className="border border rounded-b-lg focus:border-primarygreen p-2 w-full focus:outline-none  focus:primarygreen"
+              className="border border rounded-b-lg focus:border-primarygreen p-2 w-full focus:outline-none focus:primarygreen"
             />
           </div>
           <div className="w-full flex justify-center">
-          <span className="text-red-500 fext-sm">{msg}</span>
+            <span className="text-red-500 fext-sm">{msg}</span>
           </div>
-          <div className="flex justify-end">
+          <div className="flex justify-end mt-4">
             <button
               type="button"
               onClick={onClose}
@@ -111,7 +99,6 @@ const ChangePassword: React.FC<ChangePasswordModalProps> = ({
               Change Password
             </button>
           </div>
-          
         </form>
       </div>
     </div>

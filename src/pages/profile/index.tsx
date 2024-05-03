@@ -15,7 +15,6 @@ type User = {
   id: number;
   name: string;
   email: string;
- 
 };
 
 const ProfileHome: React.FC = () => {
@@ -71,20 +70,20 @@ const ProfileHome: React.FC = () => {
   return (
     <>
       <Navbar />
-      <div className="w-1/2 mx-auto h-screen bg-white-100">
-        <div className="container  mx-auto p-4">
+      <div className="min-h-screen bg-white-100 flex justify-center items-center">
+        <div className="container mx-auto p-4 md:w-3/4 lg:w-1/2">
           <div className="bg-white border shadow-xl rounded-md p-4">
-            <div className="flex justify-between ">
-              <h1 className="text-xl font-bold mb-2">User Details</h1>
-              <div>
+            <div className="flex justify-between flex-col md:flex-row md:items-center">
+              <h1 className="text-xl font-bold mb-2 md:mb-0">User Details</h1>
+              <div className="flex flex-col md:flex-row md:items-center">
                 <button
-                  className="bg-green-500 p-2 mr-2 text-white font-normal  text-sm rounded-md shadow-md"
+                  className="bg-green-500 p-2 mr-2 text-white font-normal text-sm rounded-md shadow-md mb-2 md:mb-0"
                   onClick={handlePreferenceOpenModal}
                 >
                   Change Preferences
                 </button>
                 <button
-                  className="bg-red-500 p-2 mr-10 text-white font-normal  text-sm rounded-md shadow-md"
+                  className="bg-red-500 p-2 text-white font-normal text-sm rounded-md shadow-md"
                   onClick={handleOpenModal}
                 >
                   Change Password
@@ -106,25 +105,31 @@ const ProfileHome: React.FC = () => {
                 {preferred_sports && (
                   <div className="mb-2">
                     <span className="font-bold">Sports:</span>{" "}
-                    {preferred_sports.map((item) => {
-                      return (
-                        <span className="inline-block bg-gray-200 rounded-full px-3 py-1 border shadow-md text-sm font-semibold text-gray-700 mr-2 mb-2">
+                    <div className="flex flex-wrap">
+                      {preferred_sports.map((item) => (
+                        <span
+                          key={item}
+                          className="inline-block bg-gray-200 rounded-full px-3 py-1 border shadow-md text-sm font-semibold text-gray-700 mr-2 mb-2"
+                        >
                           {item}
                         </span>
-                      );
-                    })}
+                      ))}
+                    </div>
                   </div>
                 )}
                 {preferredTeams && (
                   <div>
                     <span className="font-bold">Teams:</span>{" "}
-                    {preferredTeams.map((item) => {
-                      return (
-                        <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                    <div className="flex flex-wrap">
+                      {preferredTeams.map((item) => (
+                        <span
+                          key={item}
+                          className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+                        >
                           {item}
                         </span>
-                      );
-                    })}
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>
