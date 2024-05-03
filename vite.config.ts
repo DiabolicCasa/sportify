@@ -11,7 +11,7 @@ export default defineConfig({
     },
 
     manifest: {
-      name: 'Sportify : By Gautam Bhagat',
+      name: 'Sportify',
       short_name: 'Sportify',
       description: 'My Awesome App description',
       theme_color: '#ffffff',
@@ -39,6 +39,12 @@ export default defineConfig({
           "sizes": "512x512",
           "type": "image/png",
           "purpose": "maskable"
+        },
+        {
+          "src": "/logo512.png",
+          "sizes": "512x512",
+          "type": "image/png",
+          "purpose": "any"
         }
       ],
     }
