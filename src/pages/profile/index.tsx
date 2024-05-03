@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import { PREFERRED_SPORTS, PREFERRED_TEAM, USER } from "../../config/constants";
@@ -49,7 +50,7 @@ const ProfileHome: React.FC = () => {
 
   if (!user) {
     return null; // Or display a loading indicator or an error message
-  }
+  } 
   // State to control the modal visibility
 
   const handleOpenModal = () => {

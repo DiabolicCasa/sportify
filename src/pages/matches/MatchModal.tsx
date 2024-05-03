@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { Match } from "../../context/matches/types";
 import { API_ENDPOINT } from "../../config/constants";

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react'
 import { API_ENDPOINT, ISLOGGED, PREFERRED_SPORTS } from '../config/constants';
 import { Match, MatchSummary } from '../context/matches/types';

@@ -74,10 +74,10 @@ const ViewArticle: React.FC<ViewArticleProps> = ({
   }
 
   return (
-    <div className="fixed inset-0 mt-10 flex items-center justify-center">
+    <div className="fixed inset-0 mt-10 flex items-center justify-center z-50">
       <div className="fixed inset-0 bg-black opacity-50"></div>
       <div
-        className="bg-white w-5/6 p-8 rounded-lg shadow-lg z-10"
+        className="bg-white p-8 rounded-lg shadow-lg z-10 max-w-5xl mx-auto"
         style={{
           maxHeight: "80vh",
           overflowY: "auto",
@@ -86,25 +86,27 @@ const ViewArticle: React.FC<ViewArticleProps> = ({
         }}
       >
         {articleContent ? (
-          <div>
-            <div className="flex ">
-              <div className="w-1/2 flex flex-col items-end justify-end">
-                {" "}
-                <h1 className="text-5xl font-bold mb-4">
-                  {articleContent?.title}
-                </h1>
-                <p className="mt-5 text-xl mb-4">{articleContent?.summary}</p>
-              </div>
-              <img
-                className="w-1/2"
-                src={
-                  articleContent.thumbnail ??
-                  "https://images.pexels.com/photos/164250/pexels-photo-164250.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                }
-                alt="Image"
-              ></img>
+         <>
+          <div className="flex flex-col md:flex-row">
+            <div className="md:w-1/2 flex flex-col items-end justify-end mb-4 md:mb-0">
+              <h1 className="text-3xl md:text-5xl font-bold mb-4">
+                {articleContent?.title}
+              </h1>
+              <p className="mt-5 text-lg md:text-xl mb-4">
+                {articleContent?.summary}
+              </p>
             </div>
+            <img
+              className="w-full md:w-1/2 h-auto object-cover"
+              src={
+                articleContent.thumbnail ??
+                "https://images.pexels.com/photos/164250/pexels-photo-164250.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+              }
+              alt="Article Thumbnail"
+            />
+          </div>
 
+          <div className="mt-4">
             {articleContent?.content && (
               <div className="mb-4">
                 <h2 className="text-lg font-bold mb-2">Content:</h2>
@@ -114,9 +116,11 @@ const ViewArticle: React.FC<ViewArticleProps> = ({
             {articleContent?.teams && (
               <div className="mb-4">
                 <h2 className="text-lg font-bold mb-2">Teams:</h2>
-                <ul>
+                <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
                   {articleContent.teams.map((team) => (
-                    <li key={team.id}>{team.name}</li>
+                    <li key={team.id} className="bg-gray-200 rounded-md p-2">
+                      {team.name}
+                    </li>
                   ))}
                 </ul>
               </div>
@@ -128,6 +132,7 @@ const ViewArticle: React.FC<ViewArticleProps> = ({
               </div>
             )}
           </div>
+         </>
         ) : (
           <div className="w-full flex justify-center items-center h-32">
             <h1 className="font-semibold flex items-center text-3xl text-gray-900">
