@@ -1,14 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react'
-import { API_ENDPOINT, ISLOGGED, PREFERRED_SPORTS } from '../config/constants';
-import { Match, MatchSummary } from '../context/matches/types';
+import React, { useEffect, useState } from "react";
+import { API_ENDPOINT, ISLOGGED, PREFERRED_SPORTS } from "../config/constants";
+import { Match, MatchSummary } from "../context/matches/types";
 
 type Props = {
-  matches: Match[]
-}
+  matches: Match[];
+};
 
 const LiveMatches: React.FC<Props> = ({ matches }) => {
-  const preferredSports = JSON.parse(localStorage.getItem(PREFERRED_SPORTS) || '[]')
+  const preferredSports = JSON.parse(
+    localStorage.getItem(PREFERRED_SPORTS) || "[]"
+  );
   const [liveMatchScore, setLiveMatchScore] = useState<MatchSummary[]>([]);
 
   const fetchMatchScores = async () => {
@@ -39,17 +41,15 @@ const LiveMatches: React.FC<Props> = ({ matches }) => {
   };
 
   useEffect(() => {
-    fetchMatchScores();
-  }, []);
-
-  useEffect(() => {
+    fetchMatchScores(); // Call fetchMatchScores immediately
+  
     const intervalId = setInterval(() => {
       fetchMatchScores();
     }, 60000); // 2 minutes in milliseconds
-
+  
     // Clear interval on component unmount
     return () => clearInterval(intervalId);
-  }, []);
+  }, [matches]); // Add matches to the dependency array
 
   return (
     <div className="w-full  m-2">
@@ -66,31 +66,43 @@ const LiveMatches: React.FC<Props> = ({ matches }) => {
             }
           });
           if (newMatches.length === 0) {
-            return <p className="mx-auto my-auto font-semibold">No live matches available</p>;
+            return (
+              <p className="mx-auto my-auto font-semibold">
+                No live matches available
+              </p>
+            );
           }
           return newMatches.map((match) => (
-            <div key={match.id} className="bg-white border rounded-lg shadow-md p-4 m-2 max-w-sm w-full md:w-1/3 lg:w-1/4">
+            <div
+              key={match.id}
+              className="bg-white border rounded-lg shadow-md p-4 m-2 max-w-sm w-full md:w-1/3 lg:w-1/4"
+            >
               <div className="flex w-full justify-between">
                 <h1>{match.sportName}</h1>
                 <button onClick={fetchMatchScores}>
                   <i className="bx bx-refresh text-xl"></i>
                 </button>
               </div>
-              <h1 className="text-sm font-bold">
-                {match.name.split("at")[0]}
-              </h1>
+              <h1 className="text-sm font-bold">{match.name.split("at")[0]}</h1>
               <p className="text-gray-500 text-sm">{match.location}</p>
               <div className="mt-2">
                 {match.teams.map((team) => (
-                  <span key={team.id} className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                  <span
+                    key={team.id}
+                    className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+                  >
                     {team.name}{" "}
-                    {liveMatchScore
-                      .filter((item) => item.id === match.id)
-                      .map((item) => {
-                        if (item.playingTeam === team.id)
-                          return `(${item.score[team.name]})*`;
-                        else return `(${item.score[team.name]})`;
-                      })}
+                    {liveMatchScore.length > 0 ? (
+                      liveMatchScore
+                        .filter((item) => item.id === match.id)
+                        .map((item) => {
+                          if (item.playingTeam === team.id)
+                            return `(${item.score[team.name]})*`;
+                          else return `(${item.score[team.name]})`;
+                        })
+                    ) : (
+                      <span>--</span>
+                    )}
                   </span>
                 ))}
               </div>
@@ -99,7 +111,7 @@ const LiveMatches: React.FC<Props> = ({ matches }) => {
         })()}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default LiveMatches
+export default LiveMatches;
